@@ -1,12 +1,25 @@
+const { Profile } = require("../profile/profile.modal.js");
 const { Tasks } = require("./tasks.model.js");
 
 module.exports.createTask = async (req, res) => {
+  const { email } = req.user.user;
+  const { _id } = await Profile.findOne({ email });
   const { ...taskData } = req.body;
-  const result = await Tasks.create(taskData);
+  const data = {
+    ...taskData,
+    createdBy: _id,
+  };
+  const result = await Tasks.create(data);
   res.status(201).json(result);
 };
 module.exports.getAllTask = async (req, res) => {
   const result = await Tasks.find();
+  res.status(200).json(result);
+};
+module.exports.getAllTaskForUser = async (req, res) => {
+  const { email } = req.user.user;
+  const { _id } = await Profile.findOne({ email });
+  const result = await Tasks.find({ createdBy: _id });
   res.status(200).json(result);
 };
 module.exports.getOneTask = async (req, res) => {

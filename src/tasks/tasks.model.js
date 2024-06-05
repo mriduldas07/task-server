@@ -23,11 +23,11 @@ const taskSchema = new Schema(
       enum: ["Pending", "In Progress", "Completed"],
       default: "Pending",
     },
-    //   createdBy: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'User',
-    //     required: true,
-    //   },
+    createdBy: {
+      type: Schema.Types.ObjectId,
+      ref: "Profile",
+      required: true,
+    },
   },
   {
     timestamps: true,
