@@ -5,7 +5,7 @@ module.exports.createProfile = async (req, res) => {
   const { ...profile } = req.body;
   const isExsits = await Profile.findOne({ email: profile.email });
   const token = createToken(profile);
-  if (isExsits._id) {
+  if (isExsits?._id) {
     return res.status(200).json({ token });
   }
   await Profile.create(profile);
