@@ -22,6 +22,24 @@ module.exports.getAllTaskForUser = async (req, res) => {
   const result = await Tasks.find({ createdBy: _id });
   res.status(200).json(result);
 };
+module.exports.getAllTaskForUserCount = async (req, res) => {
+  const { email } = req.user.user;
+  const { _id } = await Profile.findOne({ email });
+  const pending = await Tasks.find({
+    createdBy: _id,
+    status: "Pending",
+  }).countDocuments();
+  const progress = await Tasks.find({
+    createdBy: _id,
+    status: "In Progress",
+  }).countDocuments();
+  const completed = await Tasks.find({
+    createdBy: _id,
+    status: "Completed",
+  }).countDocuments();
+
+  res.status(200).json([pending, progress, completed]);
+};
 module.exports.getOneTask = async (req, res) => {
   const id = req.params.id;
   const result = await Tasks.findById(id);
