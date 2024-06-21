@@ -40,6 +40,26 @@ module.exports.getAllTaskForUserCount = async (req, res) => {
 
   res.status(200).json([pending, progress, completed]);
 };
+
+module.exports.getTaskUserPriorityCount = async (req, res) => {
+  const { email } = req.user.user;
+  const { _id } = await Profile.findOne({ email });
+  const low = await Tasks.find({
+    createdBy: _id,
+    priority: "Low",
+  }).countDocuments();
+  const medium = await Tasks.find({
+    createdBy: _id,
+    priority: "Medium",
+  }).countDocuments();
+  const high = await Tasks.find({
+    createdBy: _id,
+    priority: "High",
+  }).countDocuments();
+
+  res.status(200).json([low, medium, high]);
+};
+
 module.exports.getOneTask = async (req, res) => {
   const id = req.params.id;
   const result = await Tasks.findById(id);
